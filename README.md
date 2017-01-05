@@ -31,3 +31,5 @@
 
     * This is the population script framework of sorts that I made for this assignment which is extensible
       and helps is writing easy, fail-safe population scripts for any Model
+    * populate/utils.py - This is the main framework
+    * populate/populate.py - A demo implementation of populate/utils.py for the User model
