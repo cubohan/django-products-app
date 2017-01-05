@@ -112,12 +112,20 @@ WSGI_APPLICATION = 'beauticart.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mydatabase',
+        # sqlite
+        #'ENGINE': 'django.db.backends.sqlite3',
+        #'NAME': 'mydatabase',
+        # postgres
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd3o4llk5v0uhfu',
+        'USER': 'bbcijmnzchbbuc',
+        'PASSWORD': 'f4e1fc05192e9d9f3d48f4c5c31a5f1bd1c2d279bbe75f2f2dc9e601fcbca4da',
+        'HOST': 'ec2-50-17-220-223.compute-1.amazonaws.com',
+        'PORT': 5432,
     }
 }
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
+#db_from_env = dj_database_url.config(conn_max_age=500)
+#DATABASES['default'].update(db_from_env)
 
 
 # Internationalization
