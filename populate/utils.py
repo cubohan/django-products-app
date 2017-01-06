@@ -8,8 +8,10 @@
 #   Duplicates flooding
 #   Purging changes on demand
 
+
 class ItemCreator(object):
-    verbose = True # verbose setting for static/classonly methods
+    verbose = True  # verbose setting for static/classonly methods
+
     def __init__(self, model, fields, fields_default_values=None, replace=True, verbose=True):
         """
         @param: model: django.db.models.Model => Model for which objects are to be created
@@ -23,7 +25,7 @@ class ItemCreator(object):
         self.fields = fields
         self.fields_default_values = fields_default_values
         self.verbose = verbose
-        self.list_created_objects = [] # keeps track of all obejcts created in db
+        self.list_created_objects = []  # keeps track of all obejcts created in db
 
     def create(self, data, push_defaults=True):
         """Creates object in db"""
@@ -40,18 +42,19 @@ class ItemCreator(object):
         @param: overwrite: bool => indicated whether to overwrite existing object in DB
         """
         data = self.serialize_obj(self.fields, obj)
-        if not data: # checking if object's data and fields are inconsistent
+        if not data:  # checking if object's data and fields are inconsistent
             if self.verbose:
                 print "Object is inconsistent with provided fields: {}. Can't save!".format(self.fields)
             return False
 
-        try: # checking if object already exists in DB
-            fetched_obj = self.model.objects.get(**data) # getting similar object from db
+        try:  # checking if object already exists in DB
+            fetched_obj = self.model.objects.get(
+                **data)  # getting similar object from db
             if self.verbose:
                 print "Object already exists in db: {}.".format(fetched_obj)
             if not overwrite:
                 if self.verbose:
-                    print "Returning fetched object.".format(fetched_obj)
+                    print "Returning fetched object {}.".format(fetched_obj)
                 return fetched_obj
         except self.model.DoesNotExist:
             pass
@@ -68,7 +71,7 @@ class ItemCreator(object):
         """
         for obj in self.list_created_objects:
             _obj, created = obj
-            if self.created_only and (not created):
+            if created_only and (not created):
                 if self.verbose:
                     print "Skipping deleting fetched object: {}".format(_obj)
                 continue
@@ -85,17 +88,18 @@ class ItemCreator(object):
         Also fills any kwargs not provided by default values
         """
         for key, value in data.iteritems():
-            if not key in self.fields:#PopulateUser.USER_FIELDS_DEF
+            if not key in self.fields:  # PopulateUser.USER_FIELDS_DEF
                 if self.verbose:
-                    print "Unexpected key found: %s"%(key)
+                    print "Unexpected key found: %s" % (key)
                 return None
-            if value == None:
+            if value is None:
                 if self.verbose:
-                    print "None value found for key: %s"%(key)
+                    print "None value found for key: %s" % (key)
                 return None
         _data = {}
         if self.fields_default_values and push_defaults:
-            _data = dict(self.fields_default_values)#PopulateUser.USER_FIELDS_DEF
+            # PopulateUser.USER_FIELDS_DEF
+            _data = dict(self.fields_default_values)
         _data.update(data)
         return _data
 
@@ -109,9 +113,9 @@ class ItemCreator(object):
         if len(key_list) != len(value_list):
             if ItemCreator.verbose:
                 print "Serialization falied! key and value lists have different" +\
-                        " number of elements {}, {}".format(key_list, value_list)
+                    " number of elements {}, {}".format(key_list, value_list)
             return None
-        return {key:value for key, value in zip(key_list, value_list)}
+        return {key: value for key, value in zip(key_list, value_list)}
 
     @staticmethod
     def serialize_obj(key_list, obj, accept_broken=False):
@@ -152,7 +156,7 @@ class ItemCreator(object):
         except Exception as e:
             if self.verbose:
                 print "Exception occured while trying to create object of Model: " +\
-                        "%s with data: %s"%(self.model, data)
+                    "%s with data: %s" % (self.model, data)
                 print "Probably the given model or field definitions need to be rechecked!"
                 print e
         return obj

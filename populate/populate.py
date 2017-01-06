@@ -12,7 +12,7 @@ from settings import SETUP_SETTINGS
 
 class PopulateUser(object):
     # Default User model to be accessed
-    USER_FIELDS = [ # User field names
+    USER_FIELDS = [  # #User field names
         "username",
         "password",
         "email",
@@ -21,7 +21,7 @@ class PopulateUser(object):
         "is_active",
         "is_staff",
     ]
-    USER_FIELDS_DEF = [ # Default User field values in same order as USER_FIELDS
+    USER_FIELDS_DEF = [  # Default User field values in same order as USER_FIELDS
         "user",
         "pass",
         "user@dummy.com",
@@ -30,7 +30,7 @@ class PopulateUser(object):
         False,
         False,
     ]
-    SUPER_USER_DEF = [ # Default superuser field values
+    SUPER_USER_DEF = [  # Default superuser field values
         "root",
         "root",
         "super@dummy.com",
@@ -45,15 +45,18 @@ class PopulateUser(object):
         @param: model: django model of a User. When nothing is provided, default django model is used
         """
         if not model:
-            from django.contrib.auth.models import User # importing default django model for User
+            # importing default django model for User
+            from django.contrib.auth.models import User
             model = User
         # Serializing default user field values and saving
         PopulateUser.USER_FIELDS_DEF = ItemCreator.serialize(PopulateUser.USER_FIELDS,
-                                                            PopulateUser.USER_FIELDS_DEF)
+                                                             PopulateUser.USER_FIELDS_DEF)
         # Serializing default superuser field values and saving
-        PopulateUser.SUPER_USER_DEF = ItemCreator.serialize(PopulateUser.USER_FIELDS,
-                                                            PopulateUser.SUPER_USER_DEF)
-        self.creator = ItemCreator(model, PopulateUser.USER_FIELDS_DEF, PopulateUser.USER_FIELDS_DEF)
+        PopulateUser.SUPER_USER_DEF = ItemCreator.serialize(
+            PopulateUser.USER_FIELDS,
+            PopulateUser.SUPER_USER_DEF)
+        self.creator = ItemCreator(
+            model, PopulateUser.USER_FIELDS_DEF, PopulateUser.USER_FIELDS_DEF)
 
     def create_user(self, username, password, email, f_name,
                     is_super=False, is_active=False, is_staff=False):
@@ -67,7 +70,8 @@ class PopulateUser(object):
         @param: is_active: bool DEF False; marks user as active
         @param: is_staff: bool DEF False; marks user as staff and be able to user admin site
         """
-        _data = [username, password, email, f_name, is_super, is_active, is_staff]
+        _data = [username, password, email,
+                 f_name, is_super, is_active, is_staff]
         data = self.creator.serialize(PopulateUser.USER_FIELDS, _data)
         return self.creator.create(data)
 
@@ -80,7 +84,7 @@ class PopulateUser(object):
         # creating a copy of default superuser values
         data = dict(PopulateUser.SUPER_USER_DEF)
         data.update(kwargs)
-        password = data["password"] # password can't be set by create
+        password = data["password"]  # password can't be set by create
         del data["password"]
         super_ = self.creator.create(data, push_defaults=False)
         super_.set_password(password)
@@ -96,7 +100,7 @@ class PopulateUser(object):
         # creating a copy of default user values
         data = dict(PopulateUser.USER_FIELDS_DEF)
         data.update(kwargs)
-        password = data["password"] # password can't be set by create
+        password = data["password"]  # password can't be set by create
         del data["password"]
         user_ = self.creator.create(data, push_defaults=False)
         user_.set_password(password)
@@ -112,11 +116,7 @@ def main():
     p_user = PopulateUser()
     print p_user.create_default_user()
     print p_user.create_default_superuser()
-    caller = lambda instance, filename: os.path.join(instance.name, filename)
-    print hasattr(caller, '__call__')
 
 
-
-
-
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    main()
